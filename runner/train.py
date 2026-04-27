@@ -693,7 +693,7 @@ class AF3Trainer(object):
                 self.train_step(batch)
                 if use_ema and is_update_step:
                     self.ema_wrapper.update()
-                print(f"---------------{self.step}-----------------", flush=True)
+                print(f"---------------{DIST_WRAPPER.rank}:{self.step}-----------------", flush=True)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
                     self.print(f"Step {self.step} train metrics: {metrics}")
