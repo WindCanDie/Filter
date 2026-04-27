@@ -786,6 +786,7 @@ def main() -> None:
         f"cycle={configs.model.N_cycle}, step={configs.sample_diffusion.N_step}"
     )
     print(f"Run Name: {configs.run_name}")
+    print(configs)
     trainer = AF3Trainer(configs)
     trainer.run()
 
