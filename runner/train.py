@@ -46,7 +46,7 @@ from tqdm import tqdm
 from runner.ema import EMAWrapper
 
 # Disable WANDB's console output capture to reduce unnecessary logging
-os.environ["WANDB_CONSOLE"] = "off"
+os.environ["WANDB_CONSOLE"] = "on"
 
 torch.serialization.add_safe_globals([Namespace])
 
