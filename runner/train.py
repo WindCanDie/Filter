@@ -600,7 +600,6 @@ class AF3Trainer(object):
         )
 
         with enable_amp:
-            print("--------------model_forward-----------------", flush=True)
             batch, _ = self.model_forward(batch, mode="train")
             loss, loss_dict, _ = self.get_loss(batch, mode="train")
 
@@ -662,10 +661,10 @@ class AF3Trainer(object):
         Main entry point for the AF3Trainer.
         Handles the complete training cycle including evaluation, logging, and checkpointing.
         """
-        if self.configs.eval_only or self.configs.eval_first:
-            self.evaluate()
-            if self.configs.eval_only:
-                return
+        # if self.configs.eval_only or self.configs.eval_first:
+        #     self.evaluate()
+        #     if self.configs.eval_only:
+        #         return
         use_ema = hasattr(self, "ema_wrapper")
         self.print(f"Using EMA: {use_ema}")
 
@@ -694,7 +693,7 @@ class AF3Trainer(object):
                 self.train_step(batch)
                 if use_ema and is_update_step:
                     self.ema_wrapper.update()
-
+                print(f"---------------{self.step}-----------------", flush=True)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
                     self.print(f"Step {self.step} train metrics: {metrics}")
@@ -718,8 +717,8 @@ class AF3Trainer(object):
                         )
                         self.ema_wrapper.restore()
 
-                if step_need_eval or is_last_step:
-                    self.evaluate()
+                # if step_need_eval or is_last_step:
+                #     self.evaluate()
 
                 self.global_step += 1
                 if self.global_step % self.iters_to_accumulate == 0:
