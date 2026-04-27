@@ -158,7 +158,7 @@ class AF3Trainer(object):
             # use rank-specific seed
             hash_string = f"({self.configs.seed},{DIST_WRAPPER.rank},init_seed)"
             rank_seed = int(hashlib.sha256(hash_string.encode("utf8")).hexdigest(), 16)
-            rank_seed = rank_seed % (2**32)
+            rank_seed = rank_seed % (2 ** 32)
         else:
             rank_seed = self.configs.seed
 
@@ -293,12 +293,12 @@ class AF3Trainer(object):
         """
 
         def _load_checkpoint(
-            checkpoint_path: str,
-            load_params_only: bool,
-            skip_load_optimizer: bool = False,
-            skip_load_step: bool = False,
-            skip_load_scheduler: bool = False,
-            load_step_for_scheduler: bool = True,
+                checkpoint_path: str,
+                load_params_only: bool,
+                skip_load_optimizer: bool = False,
+                skip_load_step: bool = False,
+                skip_load_scheduler: bool = False,
+                load_step_for_scheduler: bool = True,
         ) -> None:
             """
             Internal helper to load a single checkpoint.
@@ -326,7 +326,7 @@ class AF3Trainer(object):
             if sample_key.startswith("module.") and not self.use_ddp:
                 # DDP checkpoint has module. prefix, remove it if not using DDP
                 checkpoint["model"] = {
-                    k[len("module.") :]: v for k, v in checkpoint["model"].items()
+                    k[len("module."):]: v for k, v in checkpoint["model"].items()
                 }
 
             self.model.load_state_dict(
@@ -384,7 +384,7 @@ class AF3Trainer(object):
             logging.info(msg)
 
     def model_forward(
-        self, batch: Dict[str, Any], mode: str = "train"
+            self, batch: Dict[str, Any], mode: str = "train"
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         Perform a forward pass of the model.
@@ -412,7 +412,7 @@ class AF3Trainer(object):
         return batch, log_dict
 
     def get_loss(
-        self, batch: Dict[str, Any], mode: str = "train"
+            self, batch: Dict[str, Any], mode: str = "train"
     ) -> Tuple[torch.Tensor, Dict[str, Any], Dict[str, Any]]:
         """
         Compute the loss for a given batch.
@@ -457,7 +457,7 @@ class AF3Trainer(object):
 
     @torch.no_grad()
     def aggregate_metrics(
-        self, lddt_dict: Dict[str, Any], batch: Dict[str, Any]
+            self, lddt_dict: Dict[str, Any], batch: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
         Aggregate metrics across the batch.
@@ -600,6 +600,7 @@ class AF3Trainer(object):
         )
 
         with enable_amp:
+            print("--------------model_forward-----------------", flush=True)
             batch, _ = self.model_forward(batch, mode="train")
             loss, loss_dict, _ = self.get_loss(batch, mode="train")
 
@@ -675,12 +676,12 @@ class AF3Trainer(object):
                 step_need_log = (self.step + 1) % self.configs.log_interval == 0
 
                 step_need_eval = (
-                    self.configs.eval_interval > 0
-                    and (self.step + 1) % self.configs.eval_interval == 0
+                        self.configs.eval_interval > 0
+                        and (self.step + 1) % self.configs.eval_interval == 0
                 )
                 step_need_save = (
-                    self.configs.checkpoint_interval > 0
-                    and (self.step + 1) % self.configs.checkpoint_interval == 0
+                        self.configs.checkpoint_interval > 0
+                        and (self.step + 1) % self.configs.checkpoint_interval == 0
                 )
 
                 is_last_step &= is_update_step
