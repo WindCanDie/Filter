@@ -697,7 +697,7 @@ class AF3Trainer(object):
                 if use_ema and is_update_step:
                     self.ema_wrapper.update()
                 print(
-                    f"---------------end {DIST_WRAPPER.rank}:{self.step}-----------------",
+                    f"---------------step_need_log {DIST_WRAPPER.rank}:{self.step}-----------------",
                     flush=True)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
@@ -712,7 +712,9 @@ class AF3Trainer(object):
                         self.print(f"Step {self.step}, learning rate: {last_lr}")
                         if self.configs.use_wandb:
                             wandb.log(metrics, step=self.step)
-
+                print(
+                    f"---------------step_need_save {DIST_WRAPPER.rank}:{self.step}-----------------",
+                    flush=True)
                 if step_need_save or is_last_step:
                     self.save_checkpoint()
                     if use_ema:
