@@ -690,19 +690,18 @@ class AF3Trainer(object):
 
                 batch = to_device(batch, self.device)
                 self.progress_bar()
+                print(
+                    f"---------------train_step {DIST_WRAPPER.rank}:{self.step}-----------------",
+                    flush=True)
                 self.train_step(batch)
                 if use_ema and is_update_step:
                     self.ema_wrapper.update()
                 print(
-                    f"---------------{DIST_WRAPPER.rank}:{self.step}-----------------is_update_step:{step_need_log or is_last_step}",
+                    f"---------------end {DIST_WRAPPER.rank}:{self.step}-----------------",
                     flush=True)
-                print("global_step",self.global_step + 1)
-                print("iters_to_accumulate",self.iters_to_accumulate )
-                print("step_need_log",(self.global_step + 1) % self.iters_to_accumulate)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
                     self.print(f"Step {self.step} train metrics: {metrics}")
-                    print(f"Step {self.step} train metrics: {metrics}", flush=True)
                     last_lr = self.lr_scheduler.get_last_lr()
                     if DIST_WRAPPER.rank == 0:
                         if self.configs.use_wandb:
