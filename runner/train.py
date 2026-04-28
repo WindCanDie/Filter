@@ -690,15 +690,9 @@ class AF3Trainer(object):
 
                 batch = to_device(batch, self.device)
                 self.progress_bar()
-                print(
-                    f"---------------train_step {DIST_WRAPPER.rank}:{self.step}-----------------",
-                    flush=True)
                 self.train_step(batch)
                 if use_ema and is_update_step:
                     self.ema_wrapper.update()
-                print(
-                    f"---------------step_need_log {DIST_WRAPPER.rank}:{self.step}-----------------",
-                    flush=True)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
                     self.print(f"Step {self.step} train metrics: {metrics}")
@@ -712,9 +706,6 @@ class AF3Trainer(object):
                         self.print(f"Step {self.step}, learning rate: {last_lr}")
                         if self.configs.use_wandb:
                             wandb.log(metrics, step=self.step)
-                print(
-                    f"---------------step_need_save {DIST_WRAPPER.rank}:{self.step}-----------------",
-                    flush=True)
                 if step_need_save or is_last_step:
                     self.save_checkpoint()
                     if use_ema:
@@ -734,9 +725,6 @@ class AF3Trainer(object):
                 if self.step >= self.configs.max_steps:
                     self.print(f"Finished training after {self.step} steps")
                     break
-                print(
-                    f"---------------next {DIST_WRAPPER.rank}:{self.step}-----------------",
-                    flush=True)
             if self.step >= self.configs.max_steps:
                 break
 

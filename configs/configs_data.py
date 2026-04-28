@@ -126,7 +126,7 @@ default_weighted_pdb_configs = {
 
 
 data_configs = {
-    "num_dl_workers": 5,
+    "num_dl_workers": 24,
     "epoch_size": 10000,
     "train_ref_pos_augment": True,
     "test_ref_pos_augment": True,
