@@ -696,6 +696,9 @@ class AF3Trainer(object):
                 print(
                     f"---------------{DIST_WRAPPER.rank}:{self.step}-----------------is_update_step:{step_need_log or is_last_step}",
                     flush=True)
+                print("global_step",self.global_step + 1)
+                print("iters_to_accumulate",self.iters_to_accumulate )
+                print("step_need_log",(self.global_step + 1) % self.iters_to_accumulate)
                 if step_need_log or is_last_step:
                     metrics = self.train_metric_wrapper.calc()
                     self.print(f"Step {self.step} train metrics: {metrics}")
