@@ -40,11 +40,11 @@ class WeightedSampler(Sampler):
     """
 
     def __init__(
-        self,
-        weights: Sequence[float],
-        num_samples: int,
-        replacement: bool,
-        seed: int = 0,
+            self,
+            weights: Sequence[float],
+            num_samples: int,
+            replacement: bool,
+            seed: int = 0,
     ):
         self.weights = torch.as_tensor(weights, dtype=torch.double)
         self.replacement = replacement
@@ -91,14 +91,14 @@ class DistributedWeightedSampler(DistributedSampler):
     """
 
     def __init__(
-        self,
-        dataset: Dataset,
-        weights: Sequence[float],
-        num_samples: int,
-        num_replicas: Optional[int] = None,
-        rank: Optional[int] = None,
-        replacement: bool = True,
-        seed: int = 0,
+            self,
+            dataset: Dataset,
+            weights: Sequence[float],
+            num_samples: int,
+            num_replicas: Optional[int] = None,
+            rank: Optional[int] = None,
+            replacement: bool = True,
+            seed: int = 0,
     ):
         super().__init__(dataset, num_replicas=num_replicas, rank=rank, shuffle=False)
         self.weights = torch.as_tensor(weights, dtype=torch.double)
@@ -128,7 +128,7 @@ class DistributedWeightedSampler(DistributedSampler):
         indices = torch.multinomial(
             self.weights, self.num_samples, self.replacement, generator=g
         ).tolist()
-        indices = indices[self.rank : self.total_size : self.num_replicas]
+        indices = indices[self.rank: self.total_size: self.num_replicas]
         return iter(indices)
 
     def __len__(self) -> int:
@@ -152,13 +152,13 @@ class KeySumBalancedSampler(Sampler):
     """
 
     def __init__(
-        self,
-        dataset: Dataset,
-        key: str,
-        value_scale: float = 1.0,
-        seed: Optional[int] = None,
-        num_replicas: Optional[int] = None,
-        rank: Optional[int] = None,
+            self,
+            dataset: Dataset,
+            key: str,
+            value_scale: float = 1.0,
+            seed: Optional[int] = None,
+            num_replicas: Optional[int] = None,
+            rank: Optional[int] = None,
     ):
         self.dataset = dataset
         self.key = key
@@ -221,7 +221,7 @@ class KeySumBalancedSampler(Sampler):
                 ),
             )
             worker_assignments[min_worker].append(idx)
-            worker_sums[min_worker] += key_value**2
+            worker_sums[min_worker] += key_value ** 2
 
         # Fix any discrepancies in the number of samples
         all_indices = [idx for idx, _ in key_value_pairs]
@@ -266,15 +266,15 @@ class DistributedDataLoader(DataLoader):
     """
 
     def __init__(
-        self,
-        dataset: Dataset,
-        batch_size: int,
-        num_workers: int = 0,
-        collate_fn=None,
-        seed: int = 42,
-        drop_last: bool = True,
-        shuffle: bool = True,
-        sampler: Sampler = None,
+            self,
+            dataset: Dataset,
+            batch_size: int,
+            num_workers: int = 0,
+            collate_fn=None,
+            seed: int = 42,
+            drop_last: bool = True,
+            shuffle: bool = True,
+            sampler: Sampler = None,
     ):
         if sampler is not None:
             self.sampler = sampler
@@ -301,7 +301,7 @@ class DistributedDataLoader(DataLoader):
 
 
 def get_dataloaders(
-    configs: ConfigDict, world_size: int, seed: int, error_dir: Optional[str] = None
+        configs: ConfigDict, world_size: int, seed: int, error_dir: Optional[str] = None
 ):
     """
     Generate data loaders for training and testing based on the given configurations and seed.
@@ -317,7 +317,7 @@ def get_dataloaders(
 
     """
     train_dataset, test_datasets = get_datasets(configs, error_dir)
-    if world_size > 1:
+    if False:
         train_sampler = DistributedWeightedSampler(
             train_dataset,
             train_dataset.merged_datapoint_weights,
