@@ -732,6 +732,9 @@ class AF3Trainer(object):
                 if self.step >= self.configs.max_steps:
                     self.print(f"Finished training after {self.step} steps")
                     break
+                print(
+                    f"---------------next {DIST_WRAPPER.rank}:{self.step}-----------------",
+                    flush=True)
             if self.step >= self.configs.max_steps:
                 break
 
